@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BallsCollapse</string>
+    <string name="app_name">BallsRemover</string>
     <string name="no1">1</string>
     <string name="easyStr">Easy</string>
     <string name="no2">2</string>
@@ -11,7 +11,7 @@
     <string name="quitGame">Quit Game</string>
     <string name="newGame">New Game</string>
     <string name="optionButton">OPTION</string>
-    <string name="title_activity_history">LocalTop10</string>
+    <string name="title_activity_local">LocalTop10</string>
     <string name="localTop10Score">Local Top 10</string>
     <string name="title_activity_global">GlobalTop10</string>
     <string name="globalTop10Score">Global Top 10</string>

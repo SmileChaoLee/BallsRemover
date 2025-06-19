@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace 'com.smile.ballscollapse'
-    compileSdk 35
+    namespace 'com.smile.ballsremover'
+    compileSdk 36
 
     defaultConfig {
-        applicationId "com.smile.ballscollapse"
+        applicationId "com.smile.ballsremover"
         minSdk 23
-        targetSdk 35
+        targetSdk 36
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

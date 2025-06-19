@@ -10,7 +10,7 @@
     <string name="quitGame">結束遊戲</string>
     <string name="newGame">新遊戲</string>
     <string name="optionButton">選項</string>
-    <string name="title_activity_history">本機前10排名</string>
+    <string name="title_activity_local">本機前10排名</string>
     <string name="localTop10Score">本機前10排名</string>
     <string name="title_activity_global">全球前10排名</string>
     <string name="globalTop10Score">全球前10排名</string>
