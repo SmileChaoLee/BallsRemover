@@ -4,6 +4,10 @@ import android.graphics.Point
 import android.os.Parcelable
 import android.util.Log
 import com.smile.ballsremover.constants.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import java.util.Collections
 import java.util.Random
@@ -34,11 +38,37 @@ class GridData(
         mLightLine.clear()
     }
 
-    fun generateColorBalls() {
+    private fun generateColumnBalls(column: Int) {
+        Log.d(TAG, "generateColumnBalls.column = $column")
         for (i in 0 until Constants.ROW_COUNTS) {
-            for (j in 0 until Constants.COLUMN_COUNTS) {
-                val nn = mRandom.nextInt(mNumOfColorsUsed)
-                mCellValues[i][j] = Constants.BallColor[nn]
+            val nn = mRandom.nextInt(mNumOfColorsUsed)
+            mCellValues[i][column] = Constants.BallColor[nn]
+        }
+    }
+
+    fun generateColorBalls() {
+        for (j in 0 until Constants.COLUMN_COUNTS) {
+            generateColumnBalls(j)
+        }
+    }
+
+    private fun needShiftColumn() {
+        Log.d(TAG, "needShiftColumn")
+        var j = Constants.COLUMN_COUNTS - 1
+        while (j >= 0) {
+            if (mCellValues[Constants.ROW_COUNTS-1][j] == 0) {
+                Log.d(TAG, "needShiftColumn." +
+                        "mCellValues[${Constants.ROW_COUNTS-1}][$j] = 0")
+                // this column is empty then shift column
+                for (k in j downTo 1) {
+                    Log.d(TAG, "needShiftColumn.k = $k")
+                    for (i in 0 until Constants.ROW_COUNTS) {
+                        mCellValues[i][k] = mCellValues[i][k - 1]
+                    }
+                }
+                generateColumnBalls(0)
+            } else {
+                j--
             }
         }
     }
@@ -69,6 +99,8 @@ class GridData(
                 mCellValues[0][column] = 0
             }
         }
+        // Check if needs to shift columns
+        needShiftColumn()
     }
 
     fun copy(gData: GridData): GridData {

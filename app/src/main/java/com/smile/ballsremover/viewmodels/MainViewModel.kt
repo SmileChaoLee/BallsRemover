@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.smile.ballsremover.SmileApp
 import com.smile.ballsremover.constants.Constants
 import com.smile.ballsremover.models.ColorBallInfo
@@ -20,6 +21,9 @@ import com.smile.ballsremover.presenters.MainPresenter
 import com.smile.ballsremover.constants.WhichBall
 import com.smile.smilelibraries.player_record_rest.httpUrl.PlayerRecordRest
 import com.smile.smilelibraries.utilities.SoundPoolUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -105,6 +109,7 @@ class MainViewModel: ViewModel() {
 
     fun cellClickListener(i: Int, j: Int) {
         Log.d(TAG, "cellClickListener.($i, $j)")
+        if (mGameProp.isShowingScoreMessage) return
         val hasMoreTwo = mGridData.checkMoreThanTwo(i, j)
         if (hasMoreTwo) {
             val tempLine = HashSet(mGridData.getLightLine())
@@ -113,17 +118,22 @@ class MainViewModel: ViewModel() {
             mGameProp.undoScore = mGameProp.currentScore
             mGameProp.currentScore += mGameProp.lastGotScore
             currentScore.intValue = mGameProp.currentScore
+            mGameProp.isShowingScoreMessage = true
             val showScore = ShowScore(
                 mGridData.getLightLine(), mGameProp.lastGotScore,
                 object : ShowScoreCallback {
                     override fun sCallback() {
                         Log.d(TAG, "cellClickListener.sCallback")
-                        // Refresh the game view
-                        mGridData.refreshColorBalls()
-                        displayGameGridView()
-                        if (mGridData.isGameOver()) {
-                            Log.d(TAG, "cellClickListener.sCallback.gameOver()")
-                            gameOver()
+                        viewModelScope.launch(Dispatchers.Default) {
+                            // Refresh the game view
+                            mGridData.refreshColorBalls()
+                            delay(200)
+                            displayGameGridView()
+                            mGameProp.isShowingScoreMessage = false
+                            if (mGridData.isGameOver()) {
+                                Log.d(TAG, "cellClickListener.sCallback.gameOver()")
+                                gameOver()
+                            }
                         }
                     }
                 })
@@ -642,13 +652,6 @@ class MainViewModel: ViewModel() {
         gridDataArray[i][j].value = ColorBallInfo(color, WhichBall.OVAL_BALL)
     }
 
-    private fun drawNextBall(i: Int, j: Int, color: Int) {
-        Log.d(TAG, "drawNextBall.($i, $j), color = $color")
-        val trueColor = if (mGameProp.hasNextBall) color else 0
-        Log.d(TAG, "drawNextBall.($i, $j), trueColor = $trueColor")
-        gridDataArray[i][j].value = ColorBallInfo(trueColor, WhichBall.NEXT_BALL)
-    }
-
     private fun clearCell(i: Int, j: Int) {
         mGridData.setCellValue(i, j, 0)
     }
@@ -678,7 +681,6 @@ class MainViewModel: ViewModel() {
         init {
             Log.d(TAG, "ShowScore")
             pointSet = HashSet(linkedPoint)
-            mGameProp.isShowingScoreMessage = true
         }
 
         @Synchronized
@@ -697,7 +699,6 @@ class MainViewModel: ViewModel() {
                         clearCell(item.x, item.y)
                         drawBall(item.x, item.y, mGridData.getCellValue(item.x, item.y))
                     }
-                    mGameProp.isShowingScoreMessage = false
                 }
                 4 -> {
                     Log.d(TAG, "ShowScore.onProgressUpdate.dismissShowMessageOnScreen.")
@@ -723,7 +724,6 @@ class MainViewModel: ViewModel() {
                 } else {
                     showingScoreHandler.removeCallbacksAndMessages(null)
                     onProgressUpdate(4) // dismiss showing message
-                    mGameProp.isShowingScoreMessage = false
                     callback.sCallback()
                 }
             }
