@@ -165,8 +165,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         if (dialogText.isNotEmpty()) {
             val buttonListener = object: Composables.ButtonClickListener {
                 override fun buttonOkClick() {
-                    val numOfSaved: Int = viewModel.readNumberOfSaved()
-                    val msg = if (viewModel.startSavingGame(numOfSaved)) {
+                    val msg = if (viewModel.startSavingGame()) {
                             getString(R.string.succeededSaveGameStr)
                         } else {
                             getString(R.string.failedSaveGameStr)

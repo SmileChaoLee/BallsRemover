@@ -35,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +63,10 @@ import com.smile.ballsremover.ui.theme.*
 import com.smile.smilelibraries.models.ExitAppTimer
 import com.smile.smilelibraries.privacy_policy.PrivacyPolicyUtil
 import com.smile.smilelibraries.utilities.ScreenUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : MyMainView() {
 
@@ -217,6 +222,14 @@ class MainActivity : MyMainView() {
         screenY = screen.y.toFloat()
     }
 
+    private fun showColorWhenClick(isClicked: MutableState<Boolean>) {
+        CoroutineScope(Dispatchers.Default).launch {
+            isClicked.value = true
+            delay(500)
+            isClicked.value = false
+        }
+    }
+
     @Composable
     fun GameView(modifier: Modifier) {
         Log.d(TAG, "GameView.mOrientation.intValue = ${mOrientation.intValue}")
@@ -297,10 +310,13 @@ class MainActivity : MyMainView() {
 
     @Composable
     fun UndoButton(modifier: Modifier) {
-        Log.d(
-            TAG, "UndoButton.mOrientation.intValue" +
+        Log.d(TAG, "UndoButton.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
-        IconButton (onClick = { viewModel.undoTheLast() },
+        val isClicked = remember { mutableStateOf(false) }
+        IconButton (onClick = {
+            showColorWhenClick(isClicked)
+            viewModel.undoTheLast()
+                              },
             modifier = modifier
             /*, colors = IconButtonColors(
                 containerColor = Color.Transparent,
@@ -310,7 +326,7 @@ class MainActivity : MyMainView() {
             Icon(
                 painter = painterResource(R.drawable.undo),
                 contentDescription = "",
-                tint = Color.White
+                tint = if (isClicked.value) Color.Red else Color.White
             )
         }
     }
@@ -333,12 +349,16 @@ class MainActivity : MyMainView() {
         Log.d(
             TAG, "SettingButton.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
-        IconButton (onClick = { onClickSettingButton() },
+        val isClicked = remember { mutableStateOf(false) }
+        IconButton (onClick = {
+            showColorWhenClick(isClicked)
+            onClickSettingButton()
+                              },
             modifier = modifier) {
             Icon(
                 painter = painterResource(R.drawable.setting),
                 contentDescription = "",
-                tint = Color.White
+                tint = if (isClicked.value) Color.Red else Color.White
             )
         }
     }
@@ -369,7 +389,7 @@ class MainActivity : MyMainView() {
                 Icon(
                     painter = painterResource(R.drawable.three_dots),
                     contentDescription = "",
-                    tint = Color.White
+                    tint = if (expanded) Color.Red else Color.White
                 )
             }
             DropdownMenu(expanded = expanded,
@@ -379,59 +399,63 @@ class MainActivity : MyMainView() {
                 Color(getColor(android.R.color.holo_green_light)))
                     .padding(all = 0.dp)
             ) {
+                val isGlobalTop10Clicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(R.string.globalTop10Str),
-                    color = Color.Black,
+                    color = if (isGlobalTop10Clicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isGlobalTop10Clicked)
                         showTop10Players(isLocal = false)
                     })
 
+                val isLocalTop10Clicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(R.string.localTop10Score),
-                    color = Color.Black,
+                    color = if (isLocalTop10Clicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isLocalTop10Clicked)
                         showTop10Players(isLocal = true)
                     })
 
+                val isSaveGameClicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(R.string.saveGameStr),
-                    color = Color.Black,
+                    color = if (isSaveGameClicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isSaveGameClicked)
                         viewModel.saveGame()
                     })
 
+                val isLoadGameClicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(R.string.loadGameStr),
-                    color = Color.Black,
+                    color = if (isLoadGameClicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isLoadGameClicked)
                         viewModel.loadGame()
                     })
 
+                val isNewGameClicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(R.string.newGame),
-                    color = Color.Black,
+                    color = if (isNewGameClicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isNewGameClicked)
                         viewModel.newGame()
                     })
 
-                Composables.DropdownMenuItem(
-                    text = getString(R.string.quitGame),
-                    color = Color.Black,
-                    onClick = {
-                        expanded = false
-                        viewModel.quitGame()
-                    })
-
+                val isPrivacyClicked = remember { mutableStateOf(false) }
                 Composables.DropdownMenuItem(
                     text = getString(com.smile.smilelibraries.R.string.privacyPolicyString),
-                    color = Color.Black,
+                    color = if (isPrivacyClicked.value) Color.Red else Color.Black,
                     onClick = {
                         expanded = false
+                        showColorWhenClick(isPrivacyClicked)
                         PrivacyPolicyUtil.startPrivacyPolicyActivity(
                             this@MainActivity, 10
                         )

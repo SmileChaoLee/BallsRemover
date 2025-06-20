@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.smile.ballsremover.SmileApp
 import com.smile.ballsremover.constants.Constants
 import com.smile.ballsremover.models.ColorBallInfo
 import com.smile.ballsremover.models.GameProp
@@ -97,17 +98,17 @@ class MainViewModel: ViewModel() {
 
     fun cellClickListener(i: Int, j: Int) {
         Log.d(TAG, "cellClickListener.($i, $j)")
-        if (mGameProp.isShowingScoreMessage) return
+        if (SmileApp.isProcessingJob) return
         if (mGridData.checkMoreThanTwo(i, j)) {
             mGridData.backupCells()
             mGameProp.undoScore = mGameProp.currentScore
             mGameProp.undoEnable = true
+            SmileApp.isProcessingJob = true
             val tempLine = HashSet(mGridData.getLightLine())
             Log.d(TAG, "cellClickListener.tempLine.size = ${tempLine.size}")
             mGameProp.lastGotScore = calculateScore(tempLine)
             mGameProp.currentScore += mGameProp.lastGotScore
             currentScore.intValue = mGameProp.currentScore
-            mGameProp.isShowingScoreMessage = true
             val showScore = ShowScore(
                 mGridData.getLightLine(), mGameProp.lastGotScore,
                 object : ShowScoreCallback {
@@ -118,7 +119,7 @@ class MainViewModel: ViewModel() {
                             mGridData.refreshColorBalls()
                             delay(200)
                             displayGameGridView()
-                            mGameProp.isShowingScoreMessage = false
+                            SmileApp.isProcessingJob = false
                             if (mGridData.isGameOver()) {
                                 Log.d(TAG, "cellClickListener.sCallback.gameOver()")
                                 gameOver()
@@ -276,26 +277,13 @@ class MainViewModel: ViewModel() {
         setLoadGameText(sureToLoadGameStr)
     }
 
-    fun readNumberOfSaved(): Int {
-        Log.d(TAG, "readNumberOfSaved")
-        var numOfSaved = 0
-        try {
-            val fiStream = mPresenter.fileInputStream(NUM_SAVE_FILENAME)
-            numOfSaved = fiStream.read()
-            fiStream.close()
-        } catch (ex: IOException) {
-            Log.d(TAG, "readNumberOfSaved.IOException")
-            ex.printStackTrace()
-        }
-        return numOfSaved
-    }
-
-    fun startSavingGame(num: Int): Boolean {
+    fun startSavingGame(): Boolean {
         Log.d(TAG, "startSavingGame")
+        SmileApp.isProcessingJob = true
         screenMessage.value = savingGameStr
         var succeeded = true
         try {
-            var foStream = mPresenter.fileOutputStream(SAVE_FILENAME)
+            val foStream = mPresenter.fileOutputStream(SAVE_FILENAME)
             // save settings
             if (mGameProp.hasSound) foStream.write(1) else foStream.write(0)
             // save values on game grid
@@ -326,6 +314,7 @@ class MainViewModel: ViewModel() {
             succeeded = false
             Log.d(TAG, "startSavingGame.Failed.")
         }
+        SmileApp.isProcessingJob = false
         screenMessage.value = ""
         Log.d(TAG, "startSavingGame.Finished")
         return succeeded
@@ -333,6 +322,7 @@ class MainViewModel: ViewModel() {
 
     fun startLoadingGame(): Boolean {
         Log.d(TAG, "startLoadingGame")
+        SmileApp.isProcessingJob = true
         screenMessage.value = loadingGameStr
         var succeeded = true
         val hasSound: Boolean
@@ -389,8 +379,8 @@ class MainViewModel: ViewModel() {
             ex.printStackTrace()
             succeeded = false
         }
+        SmileApp.isProcessingJob = false
         screenMessage.value = ""
-
         return succeeded
     }
 
@@ -537,7 +527,6 @@ class MainViewModel: ViewModel() {
 
     companion object {
         private const val TAG = "MainViewModel"
-        private const val NUM_SAVE_FILENAME = "NumSavedGame"
         private const val SAVE_FILENAME = "SavedGame"
     }
 }
