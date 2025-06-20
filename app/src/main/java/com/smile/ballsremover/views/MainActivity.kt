@@ -131,7 +131,6 @@ class MainActivity : MyMainView() {
                     Box {
                         SaveGameDialog()
                         LoadGameDialog()
-                        // GameOverDialog() // do not show
                         SaveScoreDialog()
                     }
                 }
@@ -181,13 +180,7 @@ class MainActivity : MyMainView() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d(TAG, "onSaveInstanceState")
-        if (isChangingConfigurations) {
-            // configuration is changing then remove top10Fragment
-            SmileApp.isShowingLoadingMessage = false
-            SmileApp.isProcessingJob = false
-        }
         viewModel.onSaveInstanceState(outState)
-
         super.onSaveInstanceState(outState)
     }
 
@@ -408,8 +401,6 @@ class MainActivity : MyMainView() {
                     onClick = {
                         expanded = false
                         viewModel.saveGame()
-                        // mPresenter.setSaveGameTitle(
-                        //     getString(R.string.sureToSaveGameStr))
                     })
 
                 Composables.DropdownMenuItem(
@@ -538,7 +529,6 @@ class MainActivity : MyMainView() {
         val bitmap: Bitmap? = when(ballInfo.whichBall) {
             WhichBall.BALL-> { colorBallMap.getValue(ballColor) }
             WhichBall.OVAL_BALL-> { colorOvalBallMap.getValue(ballColor) }
-            WhichBall.NEXT_BALL-> { colorNextBallMap.getValue(ballColor) }
             WhichBall.NO_BALL -> { null }
         }
         Column(modifier = Modifier.size(mImageSizeDp.dp),

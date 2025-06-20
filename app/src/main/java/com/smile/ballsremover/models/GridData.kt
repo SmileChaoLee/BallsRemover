@@ -4,12 +4,7 @@ import android.graphics.Point
 import android.os.Parcelable
 import android.util.Log
 import com.smile.ballsremover.constants.Constants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
-import java.util.Collections
 import java.util.Random
 import java.util.Stack
 
@@ -28,10 +23,6 @@ class GridData(
         for (i in 0 until Constants.ROW_COUNTS) {
             for (j in 0 until Constants.COLUMN_COUNTS) {
                 mCellValues[i][j] = 0
-            }
-        }
-        for (i in 0 until Constants.ROW_COUNTS) {
-            for (j in 0 until Constants.COLUMN_COUNTS) {
                 mBackupCells[i][j] = 0
             }
         }
@@ -76,9 +67,9 @@ class GridData(
     fun refreshColorBalls() {
         Log.d(TAG, "refreshColorBalls.mLightLine.size = ${mLightLine.size}")
         val list = ArrayList<Point>(mLightLine)
-        list.sortWith(Comparator { p1: Point, p2: Point ->
+        list.sortWith { p1: Point, p2: Point ->
             p1.x.compareTo(p2.x)
-        })
+        }
         val rowMap = HashMap<Int, HashSet<Int>>()
         var columnSet = HashSet<Int>()
         list.forEach { point ->
@@ -90,13 +81,16 @@ class GridData(
         }
         Log.d(TAG, "refreshColorBalls.rowMap.size = ${rowMap.size}")
         rowMap.forEach { (key, set) ->
-            Log.d(TAG, "refreshColorBalls.set.size = ${set.size}")
             set.forEach { column ->
-                Log.d(TAG, "refreshColorBalls.column = $column")
+                var isEnough = false
                 for (i in key downTo 1) {
                     mCellValues[i][column] = mCellValues[i-1][column]
+                    if (mCellValues[i][column] == 0) {
+                        isEnough = true
+                        break
+                    }
                 }
-                mCellValues[0][column] = 0
+                if (!isEnough) mCellValues[0][column] = 0
             }
         }
         // Check if needs to shift columns
@@ -129,6 +123,7 @@ class GridData(
     }
 
     fun undoTheLast() {
+        Log.d(TAG, "undoTheLast")
         // restore CellValues;
         for (i in 0 until Constants.ROW_COUNTS) {
             System.arraycopy(mBackupCells[i], 0, mCellValues[i],
@@ -198,10 +193,21 @@ class GridData(
         }
     }
 
+    fun backupCells() {
+        Log.d(TAG, "backupCells")
+        // backup CellValues;
+        for (i in 0 until Constants.ROW_COUNTS) {
+            System.arraycopy(mCellValues[i], 0, mBackupCells[i],
+                0, mCellValues[i].size)
+        }
+    }
+
     fun checkMoreThanTwo(x: Int, y: Int): Boolean {
         Log.d(TAG, "checkMoreThanTwo.x = $x, y = $y")
         allConnectBalls(Point(x , y))
-        if (mLightLine.size >= Constants.BALL_NUM_COMPLETED) return true
+        if (mLightLine.size >= Constants.BALL_NUM_COMPLETED) {
+            return true
+        }
         mLightLine.clear()
         return false
     }

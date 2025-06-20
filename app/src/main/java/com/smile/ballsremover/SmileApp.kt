@@ -15,7 +15,6 @@ class SmileApp : MultiDexApplication() {
         super.onCreate()
         Log.d(TAG, "onCreate")
         mResources = resources
-        isProcessingJob = false
         isShowingLoadingMessage = false
         val googleAdMobInterstitialID = ""
         var facebookInterstitialID = ""
@@ -64,8 +63,6 @@ class SmileApp : MultiDexApplication() {
 
     companion object {
         private const val TAG = "SmileApp"
-        @JvmField
-        var isProcessingJob = false
         @JvmField
         var isShowingLoadingMessage = false
         @JvmField

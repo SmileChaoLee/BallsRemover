@@ -10,7 +10,6 @@ class MainPresenter(private val presentView: MainPresentView) {
     val loadingGameStr =  presentView.getLoadingGameStr()
     val sureToSaveGameStr = presentView.getSureToSaveGameStr()
     val sureToLoadGameStr = presentView.getSureToLoadGameStr()
-    val gameOverStr = presentView.getGameOverStr()
     val saveScoreStr = presentView. getSaveScoreStr()
     val soundPool: SoundPoolUtil = presentView.soundPool()
     val highestScore = presentView.getHighestScore()

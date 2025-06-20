@@ -19,7 +19,6 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.smile.ballsremover.BuildConfig
 import com.smile.ballsremover.Composables
 import com.smile.ballsremover.R
-import com.smile.ballsremover.SmileApp
 import com.smile.ballsremover.constants.Constants
 import com.smile.ballsremover.interfaces.MainPresentView
 import com.smile.ballsremover.presenters.MainPresenter
@@ -39,7 +38,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     protected var boxImage: Bitmap? = null
     protected val colorBallMap: HashMap<Int, Bitmap> = HashMap()
     protected val colorOvalBallMap: HashMap<Int, Bitmap> = HashMap()
-    protected val colorNextBallMap: HashMap<Int, Bitmap> = HashMap()
 
     private var interstitialAd: ShowInterstitial? = null
 
@@ -93,8 +91,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         Log.w(TAG, "bitmapDrawableResources.sizePx = $sizePx")
         val ballWidth = sizePx.toInt()
         val ballHeight = sizePx.toInt()
-        val nextBallWidth = (sizePx * 0.5f).toInt()
-        val nextBallHeight = (sizePx * 0.5f).toInt()
         val ovalBallWidth = (sizePx * 0.9f).toInt()
         val ovalBallHeight = (sizePx * 0.7f).toInt()
 
@@ -105,8 +101,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.redball)?.let { bm ->
             colorBallMap[Constants.COLOR_RED] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_RED] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_RED] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -114,8 +108,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.greenball)?.let { bm ->
             colorBallMap[Constants.COLOR_GREEN] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_GREEN] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_GREEN] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -123,8 +115,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.blueball)?.let { bm ->
             colorBallMap[Constants.COLOR_BLUE] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_BLUE] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_BLUE] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -132,8 +122,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.magentaball)?.let { bm ->
             colorBallMap[Constants.COLOR_MAGENTA] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_MAGENTA] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_MAGENTA] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -141,8 +129,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.yellowball)?.let { bm ->
             colorBallMap[Constants.COLOR_YELLOW] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_YELLOW] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_YELLOW] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -150,8 +136,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.cyanball)?.let { bm ->
             colorBallMap[Constants.COLOR_CYAN] =
                 createScaledBitmap(bm, ballWidth, ballHeight, true)
-            colorNextBallMap[Constants.COLOR_CYAN] =
-                createScaledBitmap(bm, nextBallWidth, nextBallHeight, true)
             colorOvalBallMap[Constants.COLOR_CYAN] =
                 createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
         }
@@ -172,8 +156,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
             //  NEW GAME
             viewModel.initGame(null)
         }
-        viewModel.setSaveScoreAlertDialogState(false)
-        SmileApp.isProcessingJob = false
     }
 
     @Composable
@@ -191,12 +173,10 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
                         }
                     ScreenUtil.showToast(this@MyMainView, msg, textFontSize,
                         ScreenUtil.FontSize_Pixel_Type, Toast.LENGTH_LONG)
-                    viewModel.setShowingSureSaveDialog(false)
                     viewModel.setSaveGameText("")
                     showInterstitialAd()
                 }
                 override fun buttonCancelClick() {
-                    viewModel.setShowingSureSaveDialog(false)
                     viewModel.setSaveGameText("")
                 }
             }
@@ -221,37 +201,11 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
                     }
                     ScreenUtil.showToast(this@MyMainView, msg, textFontSize,
                         ScreenUtil.FontSize_Pixel_Type, Toast.LENGTH_LONG)
-                    viewModel.setShowingSureLoadDialog(false)
                     viewModel.setLoadGameText("")
                     showInterstitialAd()
                 }
                 override fun buttonCancelClick() {
-                    viewModel.setShowingSureLoadDialog(false)
                     viewModel.setLoadGameText("")
-                }
-            }
-            Composables.DialogWithText(
-                this@MyMainView,
-                buttonListener, "", dialogText
-            )
-        }
-    }
-
-    @Composable
-    fun GameOverDialog() {
-        Log.d(TAG, "GameOverDialog")
-        val dialogText = viewModel.gameOverText.value
-        if (dialogText.isNotEmpty()) {
-            val buttonListener = object: Composables.ButtonClickListener {
-                override fun buttonOkClick() {
-                    viewModel.newGame()
-                    viewModel.setShowingGameOverDialog(false)
-                    viewModel.setGameOverText("")
-                }
-                override fun buttonCancelClick() {
-                    viewModel.quitGame()
-                    viewModel.setShowingGameOverDialog(false)
-                    viewModel.setGameOverText("")
                 }
             }
             Composables.DialogWithText(
@@ -401,8 +355,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     override fun getSureToSaveGameStr() = getString(R.string.sureToSaveGameStr)
 
     override fun getSureToLoadGameStr() = getString(R.string.sureToLoadGameStr)
-
-    override fun getGameOverStr() = getString(R.string.gameOverStr)
 
     override fun getSaveScoreStr() = getString(R.string.saveScoreStr)
 

@@ -11,7 +11,6 @@ interface MainPresentView {
     fun getLoadingGameStr(): String
     fun getSureToSaveGameStr(): String
     fun getSureToLoadGameStr(): String
-    fun getGameOverStr(): String
     fun getSaveScoreStr(): String
     fun soundPool() : SoundPoolUtil
     fun getHighestScore() : Int
