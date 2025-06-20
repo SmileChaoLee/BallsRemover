@@ -399,42 +399,14 @@ class MainViewModel: ViewModel() {
         if (linkedLine == null) {
             return 0
         }
-        val numBalls = intArrayOf(0, 0, 0, 0, 0, 0)
-        for (point in linkedLine) {
-            when (mGridData.getCellValue(point.x, point.y)) {
-                Constants.COLOR_RED -> numBalls[0]++
-                Constants.COLOR_GREEN -> numBalls[1]++
-                Constants.COLOR_BLUE -> numBalls[2]++
-                Constants.COLOR_MAGENTA -> numBalls[3]++
-                Constants.COLOR_YELLOW -> numBalls[4]++
-                Constants.COLOR_CYAN -> numBalls[5]++
-                else -> {}
-            }
-        }
-        // 5 balls --> 5
-        // 6 balls --> 5 + (6-5)*2
-        // 7 balls --> 5 + (6-5)*2 + (7-5)*2
-        // 8 balls --> 5 + (6-5)*2 + (7-5)*2 + (8-5)*2
-        // n balls --> 5 + (6-5)*2 + (7-5)*2 + ... + (n-5)*2
-        val minScore = 5
-        var totalScore = 0
-        for (numBall in numBalls) {
-            if (numBall >= 5) {
-                var score = minScore
-                val extraBalls = numBall - minScore
-                if (extraBalls > 0) {
-                    // greater than 5 balls
-                    val rate = 2
-                    for (i in 1..extraBalls) {
-                        // rate = 2;   // added on 2018-10-02
-                        score += i * rate
-                    }
-                }
-                totalScore += score
-            }
-        }
-
-        return totalScore
+        // 5 points for each ball if only 2 balls
+        // 6 points for each ball if it is 3 balls
+        // 7 points for each ball if it is 4 balls
+        // 8 points for each ball if it is 5 balls
+        val minBalls = 2
+        val minScoreEach = 5
+        val numBalls = linkedLine.size
+        return (minScoreEach + (numBalls - minBalls)) * numBalls
     }
 
     private fun drawBall(i: Int, j: Int, color: Int) {
