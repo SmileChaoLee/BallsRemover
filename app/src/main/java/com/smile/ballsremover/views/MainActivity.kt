@@ -104,14 +104,21 @@ class MainActivity : MyMainView() {
                 result: ActivityResult ->
             Log.d(TAG, "settingLauncher.result received")
             if (result.resultCode == RESULT_OK) {
+                val originalLevel = viewModel.gameLevel()
+                var newGameLevel = originalLevel
                 val data = result.data ?: return@registerForActivityResult
                 data.extras?.let { extras ->
                     viewModel.setHasSound(extras.getBoolean(Constants.HAS_SOUND,
                         true))
-                    viewModel.setGameLevel(extras.getInt(Constants.GAME_LEVEL,
-                        Constants.EASY_LEVEL))
+                    newGameLevel = extras.getInt(Constants.GAME_LEVEL,
+                        Constants.EASY_LEVEL)
+                    viewModel.setGameLevel(newGameLevel)
                     viewModel.setFillColumn(extras.getBoolean(Constants.FILL_COLUMN,
                         true))
+                }
+                if (newGameLevel != originalLevel) {
+                    // game levels are different, create a new game?
+                    viewModel.isCreatingNewGame()
                 }
                 Log.d(TAG, "settingLauncher.Showing interstitial ads")
                 // showInterstitialAd()
@@ -138,6 +145,7 @@ class MainActivity : MyMainView() {
                         }
                     }
                     Box {
+                        CreateNewGameDialog()
                         SaveGameDialog()
                         LoadGameDialog()
                         SaveScoreDialog()

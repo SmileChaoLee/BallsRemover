@@ -5,6 +5,8 @@ object Constants {
     const val HAS_SOUND = "HasSound"
     const val GAME_LEVEL = "GameLevel"
     const val FILL_COLUMN = "FillColumn"
+    const val NUM_BALLS_USED_EASY = 5
+    const val NUM_BALLS_USED_DIFF = 6
     const val EASY_LEVEL = 0
     const val DIFFICULT_LEVEL = 1
     const val IS_LOCAL_TOP10 = "IsLocalTop10"

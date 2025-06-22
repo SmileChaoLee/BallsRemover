@@ -42,6 +42,7 @@ class MainViewModel: ViewModel() {
     private val settings = Settings()
 
     private var loadingStr = ""
+    private var createNewGameStr = ""
     private var savingGameStr = ""
     private var loadingGameStr = ""
     private var sureToSaveGameStr = ""
@@ -54,6 +55,13 @@ class MainViewModel: ViewModel() {
     val currentScore = mutableIntStateOf(0)
     val highestScore = mutableIntStateOf(0)
     val screenMessage = mutableStateOf("")
+
+    private val _createNewGameText = mutableStateOf("")
+    val createNewGameText: MutableState<String>
+        get() = _createNewGameText
+    fun setCreateNewGameText(text: String) {
+        _createNewGameText.value = text
+    }
 
     private val _saveGameText = mutableStateOf("")
     val saveGameText: MutableState<String>
@@ -90,6 +98,7 @@ class MainViewModel: ViewModel() {
         mPresenter = presenter
         medalImageIds = mPresenter.medalImageIds
         loadingStr = mPresenter.loadingStr
+        createNewGameStr = mPresenter.createNewGameStr
         savingGameStr = mPresenter.savingGameStr
         loadingGameStr = mPresenter.loadingGameStr
         sureToSaveGameStr = mPresenter.sureToSaveGameStr
@@ -217,6 +226,9 @@ class MainViewModel: ViewModel() {
 
     fun setGameLevel(gameLevel: Int) {
         settings.gameLevel = gameLevel
+        val num = if (gameLevel == Constants.EASY_LEVEL) Constants.NUM_BALLS_USED_EASY
+        else Constants.NUM_BALLS_USED_DIFF
+        mGridData.setNumBallsUsed(num)
     }
     fun gameLevel(): Int {
         return settings.gameLevel
@@ -266,14 +278,22 @@ class MainViewModel: ViewModel() {
         mPresenter.addScoreInLocalTop10(playerName, mGameProp.currentScore)
     }
 
+    fun isCreatingNewGame() {
+        Log.d(TAG, "isCreatingNewGame")
+        mGameAction = Constants.IS_CREATING_GAME
+        setCreateNewGameText(createNewGameStr)
+    }
+
     fun newGame() {
         // creating a new game
+        Log.d(TAG, "newGame")
         mGameAction = Constants.IS_CREATING_GAME
         setSaveScoreTitle(saveScoreStr)
     }
 
     fun quitGame() {
         // quiting the game
+        Log.d(TAG, "newGame")
         mGameAction = Constants.IS_QUITING_GAME
         setSaveScoreTitle(saveScoreStr)
     }
@@ -421,14 +441,22 @@ class MainViewModel: ViewModel() {
         if (linkedLine == null) {
             return 0
         }
+        // easy level
         // 5 points for each ball if only 2 balls
         // 6 points for each ball if it is 3 balls
         // 7 points for each ball if it is 4 balls
         // 8 points for each ball if it is 5 balls
+        // difficult level
+        // 6 points for each ball if only 2 balls
+        // 8 points for each ball if it is 3 balls
+        // 10 points for each ball if it is 4 balls
+        // 12 points for each ball if it is 5 balls
         val minBalls = 2
-        val minScoreEach = 5
+        val minScoreEach = if (gameLevel() == Constants.EASY_LEVEL ) 5 else 6
+        val plusScore = if (gameLevel() == Constants.EASY_LEVEL ) 1 else 2
         val numBalls = linkedLine.size
-        return (minScoreEach + (numBalls - minBalls)) * numBalls
+        val totalScore = (minScoreEach + (numBalls - minBalls) * plusScore) * numBalls
+        return totalScore
     }
 
     private fun drawBall(i: Int, j: Int, color: Int) {

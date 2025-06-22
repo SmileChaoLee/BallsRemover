@@ -22,6 +22,7 @@
     <string name="cancelStr">取消</string>
     <string name="submitStr">送出</string>
     <string name="nameStr">輸入你的名字</string>
+    <string name="createNewGameStr">建立新遊戲?</string>
     <string name="loadingStr">下載中 ...</string>
     <string name="undoStr">還原</string>
     <string name="localTop10Str">前10名高分</string>

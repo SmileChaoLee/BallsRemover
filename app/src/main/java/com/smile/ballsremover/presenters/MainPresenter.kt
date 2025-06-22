@@ -5,6 +5,7 @@ import com.smile.smilelibraries.utilities.SoundPoolUtil
 
 class MainPresenter(private val presentView: MainPresentView) {
     val medalImageIds = presentView.getMedalImageIds()
+    val createNewGameStr = presentView.getCreateNewGameStr()
     val loadingStr = presentView.getLoadingStr()
     val savingGameStr = presentView.geSavingGameStr()
     val loadingGameStr =  presentView.getLoadingGameStr()

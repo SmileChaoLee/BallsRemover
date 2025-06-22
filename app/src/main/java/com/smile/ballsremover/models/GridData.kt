@@ -8,11 +8,11 @@ import kotlinx.parcelize.Parcelize
 import java.util.Random
 import java.util.Stack
 
-private const val mNumOfColorsUsed : Int = 5
 private val mRandom: Random = Random(System.currentTimeMillis())
 
 @Parcelize
 class GridData(
+    private var mNumOfColorsUsed : Int = Constants.NUM_BALLS_USED_EASY,
     private val mCellValues : Array<IntArray> =
         Array(Constants.ROW_COUNTS) { IntArray(Constants.COLUMN_COUNTS){0} },
     private val mBackupCells : Array<IntArray> =
@@ -69,6 +69,10 @@ class GridData(
             }
             columnLeft--
         }
+    }
+
+    fun setNumBallsUsed(num: Int) {
+        mNumOfColorsUsed = num
     }
 
     fun refreshColorBalls(fillColumn: Boolean) {

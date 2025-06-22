@@ -159,6 +159,27 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     }
 
     @Composable
+    fun CreateNewGameDialog() {
+        Log.d(TAG, "CreateNewGameDialog")
+        val dialogText = viewModel.createNewGameText.value
+        if (dialogText.isNotEmpty()) {
+            val buttonListener = object: Composables.ButtonClickListener {
+                override fun buttonOkClick() {
+                    viewModel.setCreateNewGameText("")
+                    quitOrNewGame()
+                }
+                override fun buttonCancelClick() {
+                    viewModel.setCreateNewGameText("")
+                }
+            }
+            Composables.DialogWithText(
+                this@MyMainView,
+                buttonListener, "", dialogText
+            )
+        }
+    }
+
+    @Composable
     fun SaveGameDialog() {
         Log.d(TAG, "SaveGameDialog")
         val dialogText = viewModel.saveGameText.value
@@ -344,6 +365,8 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         )
         return medalImageIds
     }
+
+    override fun getCreateNewGameStr() = getString(R.string.createNewGameStr)
 
     override fun getLoadingStr() = getString(R.string.loadingStr)
 

@@ -23,6 +23,7 @@
     <string name="cancelStr">Cancel</string>
     <string name="submitStr">Send</string>
     <string name="nameStr">Input your name</string>
+    <string name="createNewGameStr">Create a New Game?</string>
     <string name="loadingStr">Loading ...</string>
     <string name="undoStr">Undo</string>
     <string name="localTop10Str">Local Top 10</string>

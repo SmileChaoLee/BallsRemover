@@ -6,6 +6,7 @@ import java.io.FileOutputStream
 
 interface MainPresentView {
     fun getMedalImageIds(): List<Int>
+    fun getCreateNewGameStr(): String
     fun getLoadingStr(): String
     fun geSavingGameStr(): String
     fun getLoadingGameStr(): String
