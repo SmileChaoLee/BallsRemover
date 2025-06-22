@@ -6,7 +6,7 @@
     <string name="no2">2</string>
     <string name="difficultStr">困難</string>
     <string name="playerLevelStr">難易程度</string>
-    <string name="nextBallSettingStr">下一批色球</string>
+    <string name="fillColumnStr">填滿直排欄</string>
     <string name="quitGame">結束遊戲</string>
     <string name="newGame">新遊戲</string>
     <string name="optionButton">選項</string>

@@ -108,6 +108,10 @@ class MainActivity : MyMainView() {
                 data.extras?.let { extras ->
                     viewModel.setHasSound(extras.getBoolean(Constants.HAS_SOUND,
                         true))
+                    viewModel.setGameLevel(extras.getInt(Constants.GAME_LEVEL,
+                        Constants.EASY_LEVEL))
+                    viewModel.setFillColumn(extras.getBoolean(Constants.FILL_COLUMN,
+                        true))
                 }
                 Log.d(TAG, "settingLauncher.Showing interstitial ads")
                 // showInterstitialAd()
@@ -293,7 +297,7 @@ class MainActivity : MyMainView() {
                 " = ${mOrientation.intValue}")
         Text(text = viewModel.currentScore.intValue.toString(),
             modifier = modifier,
-            color = Color.Red, fontSize = Composables.mFontSize
+            color = Color.Green, fontSize = Composables.mFontSize
         )
     }
 
@@ -338,6 +342,8 @@ class MainActivity : MyMainView() {
         ).let {
             Bundle().apply {
                 putBoolean(Constants.HAS_SOUND, viewModel.hasSound())
+                putInt(Constants.GAME_LEVEL, viewModel.gameLevel())
+                putBoolean(Constants.FILL_COLUMN, viewModel.fillColumn())
                 it.putExtras(this)
                 settingLauncher.launch(it)
             }

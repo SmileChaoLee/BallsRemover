@@ -43,10 +43,11 @@ class GridData(
         }
     }
 
-    private fun needShiftColumn() {
-        Log.d(TAG, "needShiftColumn")
+    private fun needShiftColumn(fillColumn: Boolean) {
+        Log.d(TAG, "needShiftColumn.fillColumn = $fillColumn")
+        var columnLeft = Constants.COLUMN_COUNTS
         var j = Constants.COLUMN_COUNTS - 1
-        while (j >= 0) {
+        while (j >= 0 && columnLeft > 0) {
             if (mCellValues[Constants.ROW_COUNTS-1][j] == 0) {
                 Log.d(TAG, "needShiftColumn." +
                         "mCellValues[${Constants.ROW_COUNTS-1}][$j] = 0")
@@ -57,14 +58,20 @@ class GridData(
                         mCellValues[i][k] = mCellValues[i][k - 1]
                     }
                 }
-                generateColumnBalls(0)
+                if (fillColumn) generateColumnBalls(0)
+                else {
+                    for (row in 0 until Constants.ROW_COUNTS) {
+                        mCellValues[row][0] = 0
+                    }
+                }
             } else {
                 j--
             }
+            columnLeft--
         }
     }
 
-    fun refreshColorBalls() {
+    fun refreshColorBalls(fillColumn: Boolean) {
         Log.d(TAG, "refreshColorBalls.mLightLine.size = ${mLightLine.size}")
         val list = ArrayList<Point>(mLightLine)
         list.sortWith { p1: Point, p2: Point ->
@@ -82,19 +89,14 @@ class GridData(
         Log.d(TAG, "refreshColorBalls.rowMap.size = ${rowMap.size}")
         rowMap.forEach { (key, set) ->
             set.forEach { column ->
-                var isEnough = false
                 for (i in key downTo 1) {
                     mCellValues[i][column] = mCellValues[i-1][column]
-                    if (mCellValues[i][column] == 0) {
-                        isEnough = true
-                        break
-                    }
                 }
-                if (!isEnough) mCellValues[0][column] = 0
+                mCellValues[0][column] = 0
             }
         }
         // Check if needs to shift columns
-        needShiftColumn()
+        needShiftColumn(fillColumn)
     }
 
     fun copy(gData: GridData): GridData {

@@ -23,20 +23,18 @@ class SettingViewModel : ViewModel() {
         }
     }
 
-    fun setEasyLevel(easyLevel: Boolean) {
+    fun setGameLevel(gameLevel: Int) {
         _settings.value?.let {
-            it.easyLevel = easyLevel
+            it.gameLevel = gameLevel
             // Have to trigger notifyPropertyChanged of Settings model
             // _settings.postValue(it)
             _settings.value = it
         }
     }
 
-    fun setHasNextBall(hasNextBall: Boolean) {
+    fun setFillColumn(fillColumn: Boolean) {
         _settings.value?.let {
-            it.hasNextBall = hasNextBall
-            // Have to trigger notifyPropertyChanged of Settings model
-            // _settings.postValue(it)
+            it.fillColumn = fillColumn
             _settings.value = it
         }
     }

@@ -19,6 +19,7 @@ import com.smile.ballsremover.models.GameProp
 import com.smile.ballsremover.models.GridData
 import com.smile.ballsremover.presenters.MainPresenter
 import com.smile.ballsremover.constants.WhichBall
+import com.smile.ballsremover.models.Settings
 import com.smile.smilelibraries.player_record_rest.httpUrl.PlayerRecordRest
 import com.smile.smilelibraries.utilities.SoundPoolUtil
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,7 @@ class MainViewModel: ViewModel() {
     private val showingScoreHandler = Handler(Looper.getMainLooper())
     private var mGameProp = GameProp()
     private var mGridData = GridData()
+    private val settings = Settings()
 
     private var loadingStr = ""
     private var savingGameStr = ""
@@ -116,7 +118,7 @@ class MainViewModel: ViewModel() {
                         Log.d(TAG, "cellClickListener.sCallback")
                         viewModelScope.launch(Dispatchers.Default) {
                             // Refresh the game view
-                            mGridData.refreshColorBalls()
+                            mGridData.refreshColorBalls(fillColumn())
                             delay(200)
                             displayGameGridView()
                             SmileApp.isProcessingJob = false
@@ -206,16 +208,25 @@ class MainViewModel: ViewModel() {
         outState.putParcelable(Constants.GRID_DATA_TAG, mGridData)
     }
 
+    fun setHasSound(hasSound: Boolean) {
+        settings.hasSound = hasSound
+    }
     fun hasSound(): Boolean {
-        println("Presenter.hasSound.mGameProp = $mGameProp")
-        println("Presenter.hasSound.hasSound = ${mGameProp.hasSound}")
-        return mGameProp.hasSound
+        return settings.hasSound
     }
 
-    fun setHasSound(hasSound: Boolean) {
-        println("Presenter.setHasSound.mGameProp = $mGameProp")
-        println("Presenter.setHasSound.hasSound = $hasSound")
-        mGameProp.hasSound = hasSound
+    fun setGameLevel(gameLevel: Int) {
+        settings.gameLevel = gameLevel
+    }
+    fun gameLevel(): Int {
+        return settings.gameLevel
+    }
+
+    fun setFillColumn(fillColumn: Boolean) {
+        settings.fillColumn = fillColumn
+    }
+    fun fillColumn(): Boolean {
+        return settings.fillColumn
     }
 
     fun undoTheLast() {
@@ -285,7 +296,7 @@ class MainViewModel: ViewModel() {
         try {
             val foStream = mPresenter.fileOutputStream(SAVE_FILENAME)
             // save settings
-            if (mGameProp.hasSound) foStream.write(1) else foStream.write(0)
+            if (hasSound()) foStream.write(1) else foStream.write(0)
             // save values on game grid
             for (i in 0 until Constants.ROW_COUNTS) {
                 for (j in 0 until Constants.COLUMN_COUNTS) {
@@ -326,6 +337,8 @@ class MainViewModel: ViewModel() {
         screenMessage.value = loadingGameStr
         var succeeded = true
         val hasSound: Boolean
+        val gameLevel: Int
+        val fillColumn: Boolean
         val gameCells = Array(Constants.ROW_COUNTS) {
             IntArray(Constants.COLUMN_COUNTS) }
         val cScore: Int
@@ -337,9 +350,12 @@ class MainViewModel: ViewModel() {
             val fiStream = mPresenter.fileInputStream(SAVE_FILENAME)
             Log.d(TAG, "startLoadingGame.available() = " + fiStream.available())
             Log.d(TAG, "startLoadingGame.getChannel().size() = " + fiStream.channel.size())
-            // game sound
+            // game settings
             var bValue = fiStream.read()
             hasSound = bValue == 1
+            gameLevel = fiStream.read()
+            bValue = fiStream.read()
+            fillColumn = bValue == 1
             // load values on game grid
             for (i in 0 until Constants.ROW_COUNTS) {
                 for (j in 0 until Constants.COLUMN_COUNTS) {
@@ -366,7 +382,6 @@ class MainViewModel: ViewModel() {
             fiStream.close()
 
             // refresh Main UI with loaded data
-            setHasSound(hasSound)
             mGridData.setCellValues(gameCells)
             mGridData.setBackupCells(backupCells)
             mGameProp.currentScore = cScore
@@ -391,7 +406,9 @@ class MainViewModel: ViewModel() {
 
     private fun gameOver() {
         Log.d(TAG, "gameOver")
-        soundPool.playSound()
+        if (hasSound()) {
+            soundPool.playSound()
+        }
         newGame()
     }
 

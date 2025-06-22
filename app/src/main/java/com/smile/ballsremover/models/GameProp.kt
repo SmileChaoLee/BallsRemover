@@ -8,14 +8,12 @@ data class GameProp(
     var undoEnable : Boolean = false,
     var currentScore : Int = 0,
     var undoScore : Int = 0,
-    var lastGotScore : Int = 0,
-    var hasSound : Boolean = true) : Parcelable {
+    var lastGotScore : Int = 0) : Parcelable {
 
     fun initialize() {
         undoEnable = false
         currentScore = 0
         undoScore = 0
         lastGotScore = 0
-        hasSound = true
     }
 }

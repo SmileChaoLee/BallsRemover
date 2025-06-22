@@ -29,6 +29,8 @@ class SettingActivity : ComponentActivity() {
             val setting = Settings()
             intent.extras?.let {
                 setting.hasSound = it.getBoolean(Constants.HAS_SOUND, true)
+                setting.gameLevel = it.getInt(Constants.GAME_LEVEL, Constants.EASY_LEVEL)
+                setting.fillColumn = it.getBoolean(Constants.FILL_COLUMN, true)
             }
             settingViewModel.setSettings(setting)
         } else {
@@ -44,13 +46,13 @@ class SettingActivity : ComponentActivity() {
                 Log.d(TAG, "textClick.hasSoundClick.hasSound = $hasSound")
                 settingViewModel.setHasSound(hasSound)
             }
-            override fun easyLevelClick(easyLevel: Boolean) {
-                Log.d(TAG, "textClick.easyLevelClick.easyLevel = $easyLevel")
-                settingViewModel.setEasyLevel(easyLevel)
+            override fun gameLevelClick(gameLevel: Int) {
+                Log.d(TAG, "textClick.gameLevelClick.gameLevel = $gameLevel")
+                settingViewModel.setGameLevel(gameLevel)
             }
-            override fun hasNextClick(hasNext: Boolean) {
-                Log.d(TAG, "textClick.hasNextClick.hasNext = $hasNext")
-                settingViewModel.setHasNextBall(hasNext)
+            override fun isFillColumnClick(fillColumn: Boolean) {
+                Log.d(TAG, "textClick.isFillColumnClick.hasNext = $fillColumn")
+                settingViewModel.setFillColumn(fillColumn)
             }
         }
 
@@ -120,6 +122,8 @@ class SettingActivity : ComponentActivity() {
             Bundle().let { bundle ->
                 settingViewModel.settings.value?.also {
                     bundle.putBoolean(Constants.HAS_SOUND, it.hasSound)
+                    bundle.putInt(Constants.GAME_LEVEL, it.gameLevel)
+                    bundle.putBoolean(Constants.FILL_COLUMN, it.fillColumn)
                     intent.putExtras(bundle)
                 }
             }

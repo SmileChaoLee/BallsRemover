@@ -7,7 +7,7 @@
     <string name="no2">2</string>
     <string name="difficultStr">Difficult</string>
     <string name="playerLevelStr">Level</string>
-    <string name="nextBallSettingStr">Next Balls</string>
+    <string name="fillColumnStr">Fill Column</string>
     <string name="quitGame">Quit Game</string>
     <string name="newGame">New Game</string>
     <string name="optionButton">OPTION</string>

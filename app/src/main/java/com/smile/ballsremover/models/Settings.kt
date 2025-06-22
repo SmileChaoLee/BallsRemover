@@ -6,5 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Settings internal constructor(
     var hasSound : Boolean = true,
-    var easyLevel : Boolean = true,
-    var hasNextBall : Boolean = true): Parcelable
+    // 0 --> easy for 5 color balls
+    // 1 --> difficult for 6 color balls
+    var gameLevel : Int = 0,
+    var fillColumn : Boolean = true): Parcelable

@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smile.ballsremover.constants.Constants
 import com.smile.ballsremover.models.Settings
 import com.smile.ballsremover.models.TopPlayer
 import com.smile.ballsremover.ui.theme.ColorPrimary
@@ -64,8 +66,8 @@ object Composables {
 
     interface SettingClickListener {
         fun hasSoundClick(hasSound: Boolean)
-        fun easyLevelClick(easyLevel: Boolean)
-        fun hasNextClick(hasNext: Boolean)
+        fun gameLevelClick(gameLevel: Int)
+        fun isFillColumnClick(fillColumn: Boolean)
     }
 
     var mFontSize = 24.sp
@@ -210,7 +212,6 @@ object Composables {
         text: String, backgroundColor: Color,
         setting: Settings
     ) {
-
         val textColor = Color(0xffffa500)
         val spaceWeight = 1.0f
         val dividerWeight = 1.0f
@@ -312,7 +313,7 @@ object Composables {
                         val no2Str = activity.getString(R.string.no2)
                         val easyStr = activity.getString(R.string.easyStr)
                         val diffStr = activity.getString(R.string.difficultStr)
-                        var easyLevel by remember { mutableStateOf(setting.easyLevel) }
+                        var gameLevel by remember { mutableIntStateOf(setting.gameLevel) }
                         MenuItemText(
                             text = activity.getString(R.string.playerLevelStr),
                             color = textColor,
@@ -325,14 +326,15 @@ object Composables {
                                 .weight(1f)
                                 .padding(all = 0.dp)
                                 .clickable {
-                                    easyLevel = !easyLevel
-                                    textListener.easyLevelClick(easyLevel)
+                                    gameLevel = if (gameLevel == Constants.EASY_LEVEL) Constants.DIFFICULT_LEVEL
+                                    else Constants.EASY_LEVEL
+                                    textListener.gameLevelClick(gameLevel)
                                 },
-                            text = if (easyLevel) no1Str else no2Str,
+                            text = if (gameLevel == Constants.EASY_LEVEL) no1Str else no2Str,
                             Color.White
                         )
                         MenuItemText(
-                            text = if (easyLevel) easyStr else diffStr,
+                            text = if (gameLevel == Constants.EASY_LEVEL) easyStr else diffStr,
                             color = textColor,
                             modifier = Modifier
                                 .weight(1f)
@@ -346,9 +348,9 @@ object Composables {
                     ) {
                         val showStr = activity.getString(R.string.showStr)
                         val noShowStr = activity.getString(R.string.noShowStr)
-                        var hasNext by remember { mutableStateOf(setting.hasNextBall) }
+                        var fillColumn by remember { mutableStateOf(setting.fillColumn) }
                         MenuItemText(
-                            text = activity.getString(R.string.nextBallSettingStr),
+                            text = activity.getString(R.string.fillColumnStr),
                             color = textColor,
                             modifier = Modifier
                                 .weight(1f)
@@ -358,14 +360,14 @@ object Composables {
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(all = 0.dp).clickable {
-                                    hasNext = !hasNext
-                                    textListener.hasNextClick(hasNext)
+                                    fillColumn = !fillColumn
+                                    textListener.isFillColumnClick(fillColumn)
                                 },
-                            text = if (hasNext) onStr else offStr,
+                            text = if (fillColumn) onStr else offStr,
                             Color.White
                         )
                         MenuItemText(
-                            text = if (hasNext) showStr else noShowStr,
+                            text = if (fillColumn) showStr else noShowStr,
                             color = textColor,
                             modifier = Modifier
                                 .weight(1f)
