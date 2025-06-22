@@ -97,6 +97,9 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         BitmapFactory.decodeResource(resources, R.drawable.box_image).let { bm ->
             boxImage = createScaledBitmap(bm, ballWidth, ballHeight, true)
         }
+        Log.d(TAG, "bitmapDrawableResources.boxImage.height = ${boxImage?.height}")
+        Log.d(TAG, "bitmapDrawableResources.boxImage.height.toDp " +
+                "= ${ScreenUtil.pixelToDp(boxImage?.height!!.toFloat())}")
 
         BitmapFactory.decodeResource(resources, R.drawable.redball)?.let { bm ->
             colorBallMap[Constants.COLOR_RED] =

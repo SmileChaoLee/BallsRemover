@@ -255,13 +255,20 @@ class MainActivity : MyMainView() {
             barWeight = 1.0f
             gameWeight = 9.0f
         }
-
+        val gridHeight = ScreenUtil.pixelToDp(screenY) * (gameWeight-0.5f) / 10.0f
+        Log.d(TAG, "GameView.gridHeight = $gridHeight")
+        val heightPerBall = gridHeight / Constants.ROW_COUNTS
+        Log.d(TAG, "GameView.heightPerBall = $heightPerBall")
+        val widthPerBall = ScreenUtil.pixelToDp(maxWidth) / Constants.COLUMN_COUNTS
+        Log.d(TAG, "GameView.widthPerBall = $widthPerBall")
         // set size of color balls
-        val imageSizePx = (maxWidth / (Constants.COLUMN_COUNTS.toFloat()))
-        Log.d(TAG, "GameView.imageSizePx = $imageSizePx")
-        mImageSizeDp = ScreenUtil.pixelToDp(imageSizePx)
+        mImageSizeDp = if (heightPerBall>widthPerBall) widthPerBall
+        else heightPerBall
         Log.d(TAG, "GameView.mImageSizeDp = $mImageSizeDp")
-        bitmapDrawableResources(imageSizePx)
+        Log.d(TAG, "GameView.mImageSizeDp*Constants.COLUMNS " +
+                "= ${mImageSizeDp*Constants.COLUMN_COUNTS}")
+        val sizePx = ScreenUtil.dpToPixel(mImageSizeDp)
+        bitmapDrawableResources(sizePx)
 
         val topPadding = 0f
         // val backgroundColor = Color(getColor(R.color.yellow3))
