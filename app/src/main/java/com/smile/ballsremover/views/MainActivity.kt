@@ -255,7 +255,7 @@ class MainActivity : MyMainView() {
             barWeight = 1.0f
             gameWeight = 9.0f
         }
-        val gridHeight = ScreenUtil.pixelToDp(screenY) * (gameWeight-0.5f) / 10.0f
+        val gridHeight = ScreenUtil.pixelToDp(screenY) * gameWeight / 10.0f
         Log.d(TAG, "GameView.gridHeight = $gridHeight")
         val heightPerBall = gridHeight / Constants.ROW_COUNTS
         Log.d(TAG, "GameView.heightPerBall = $heightPerBall")

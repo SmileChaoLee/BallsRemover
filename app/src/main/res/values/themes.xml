@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.BallsRemover" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.BallsRemover" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
     <style name="ThemeTransparent" parent="Theme.BallsRemover">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
