@@ -6,7 +6,7 @@
     <string name="no2">2</string>
     <string name="difficultStr">困难</string>
     <string name="playerLevelStr">难易程度</string>
-    <string name="fillColumnStr">填滿直排欄</string>
+    <string name="fillColumnStr">填滿空白欄</string>
     <string name="quitGame">结束游戏</string>
     <string name="newGame">新游戏</string>
     <string name="optionButton">选项</string>

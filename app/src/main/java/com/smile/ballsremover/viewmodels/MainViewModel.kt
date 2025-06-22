@@ -297,6 +297,8 @@ class MainViewModel: ViewModel() {
             val foStream = mPresenter.fileOutputStream(SAVE_FILENAME)
             // save settings
             if (hasSound()) foStream.write(1) else foStream.write(0)
+            foStream.write(gameLevel())
+            if (fillColumn()) foStream.write(1) else foStream.write(0)
             // save values on game grid
             for (i in 0 until Constants.ROW_COUNTS) {
                 for (j in 0 until Constants.COLUMN_COUNTS) {
@@ -350,12 +352,15 @@ class MainViewModel: ViewModel() {
             val fiStream = mPresenter.fileInputStream(SAVE_FILENAME)
             Log.d(TAG, "startLoadingGame.available() = " + fiStream.available())
             Log.d(TAG, "startLoadingGame.getChannel().size() = " + fiStream.channel.size())
-            // game settings
+            // read game settings
             var bValue = fiStream.read()
             hasSound = bValue == 1
             gameLevel = fiStream.read()
             bValue = fiStream.read()
             fillColumn = bValue == 1
+            settings.hasSound = hasSound
+            settings.gameLevel = gameLevel
+            settings.fillColumn = fillColumn
             // load values on game grid
             for (i in 0 until Constants.ROW_COUNTS) {
                 for (j in 0 until Constants.COLUMN_COUNTS) {
