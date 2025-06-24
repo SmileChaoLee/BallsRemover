@@ -391,11 +391,13 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         Log.d(TAG, "getHighestScore")
         val scoreSQLiteDB = ScoreSQLite(this)
         val score = scoreSQLiteDB.readHighestScore()
+        Log.d(TAG, "getHighestScore.score = $score")
         scoreSQLiteDB.close()
         return score
     }
 
     override fun addScoreInLocalTop10(playerName : String, score : Int) {
+        Log.d(TAG, "addScoreInLocalTop10")
         val scoreSQLiteDB = ScoreSQLite(this)
         if (scoreSQLiteDB.isInTop10(score)) {
             // inside top 10, then record the current score

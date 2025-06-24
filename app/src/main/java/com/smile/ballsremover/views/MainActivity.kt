@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -400,9 +401,14 @@ class MainActivity : MyMainView() {
 
     @Composable
     fun ShowMenu(modifier: Modifier) {
-        Log.d(
-            TAG, "ShowMenu.mOrientation.intValue" +
+        Log.d(TAG, "ShowMenu.mOrientation.intValue" +
                  " = ${mOrientation.intValue}")
+        val dropdownWidth =
+            if (mOrientation.intValue == Configuration.ORIENTATION_PORTRAIT) {
+                mImageSizeDp * 6.0f
+            } else {
+                mImageSizeDp * 8.0f
+            }
         var expanded by remember { mutableStateOf(false) }
         Log.d(TAG, "ShowMenu.expanded = $expanded")
         Box(modifier = modifier) {
@@ -415,7 +421,8 @@ class MainActivity : MyMainView() {
             }
             DropdownMenu(expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.requiredHeightIn(max = (mImageSizeDp*9f).dp)
+                modifier = Modifier.requiredHeightIn(max = (mImageSizeDp*12.0f).dp)
+                    .requiredWidth(dropdownWidth.dp)
                     .background(color =
                 Color(getColor(android.R.color.holo_green_light)))
                     .padding(all = 0.dp)

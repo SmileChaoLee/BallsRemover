@@ -155,12 +155,14 @@ class MainViewModel: ViewModel() {
     }
 
     fun initGame(state: Bundle?) {
-        Log.d(TAG, "initGame.isNewGame = $state")
+        Log.d(TAG, "initGame = $state")
         val isNewGame = restoreState(state)
-        highestScore.intValue = mPresenter.highestScore
+        highestScore.intValue = mPresenter.highestScore()
+        Log.d(TAG, "initGame.highestScore = ${highestScore.intValue}")
         currentScore.intValue = mGameProp.currentScore
         if (isNewGame) {
             // generate
+            Log.d(TAG, "initGame.isNewGame")
             mGridData.generateColorBalls()
         }
         displayGameGridView()
@@ -273,7 +275,6 @@ class MainViewModel: ViewModel() {
             }
         }
         restThread.start()
-
         // save to local storage
         mPresenter.addScoreInLocalTop10(playerName, mGameProp.currentScore)
     }

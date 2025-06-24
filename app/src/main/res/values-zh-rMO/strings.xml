@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">崩色球</string>
+    <string name="app_name">色球移除</string>
     <string name="no1">1</string>
     <string name="easyStr">容易</string>
     <string name="no2">2</string>

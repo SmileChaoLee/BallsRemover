@@ -117,7 +117,7 @@ object Composables {
         onClick: () -> Unit,
         isDivider: Boolean = true
     ) {
-        val itemHeight = textUnitToDp((menuItemFontSize.value + 3).sp)
+        val itemHeight = textUnitToDp((menuItemFontSize.value + 12).sp)
         androidx.compose.material3.DropdownMenuItem(
             modifier = Modifier
                 .height(height = itemHeight)
