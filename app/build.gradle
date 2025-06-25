@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
-    // id 'com.google.gms.google-services'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -15,8 +15,8 @@ android {
         applicationId "com.smile.ballsremover"
         minSdk 23
         targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        versionCode 11
+        versionName "1.1"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -68,15 +68,23 @@ dependencies {
     implementation libs.androidx.ui.tooling.preview
     implementation libs.androidx.material3
 
-    implementation libs.audience.network.sdk
     implementation libs.infer.annotation
     implementation libs.firebase.core
     implementation libs.firebase.ads
     implementation libs.androidx.multidex
     implementation libs.accompanist.drawablepainter
 
+    // Retrofit
+    implementation libs.retrofit  // support api under 21
+    implementation libs.converter.gson
+
     implementation files('libs/smilelibraries-release.aar')
     implementation files('libs/NativeTemplatesModels-release.aar')
+
+    testImplementation libs.androidx.espresso.core
+    testImplementation libs.robolectric
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockito.core
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

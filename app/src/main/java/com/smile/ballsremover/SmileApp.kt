@@ -3,12 +3,10 @@ package com.smile.ballsremover
 import android.content.res.Resources
 import android.util.Log
 import androidx.multidex.MultiDexApplication
-import com.smile.smilelibraries.facebook_ads_util.FacebookInterstitial
+import com.google.android.gms.ads.MobileAds
 import com.smile.smilelibraries.google_ads_util.AdMobInterstitial
 
 class SmileApp : MultiDexApplication() {
-    @JvmField
-    var facebookAds: FacebookInterstitial? = null
     @JvmField
     var googleInterstitialAd: AdMobInterstitial? = null
     override fun onCreate() {
@@ -16,44 +14,12 @@ class SmileApp : MultiDexApplication() {
         Log.d(TAG, "onCreate")
         mResources = resources
         isProcessingJob = false
-        val googleAdMobInterstitialID = ""
-        var facebookInterstitialID = ""
-        facebookBannerID = ""
-        facebookBannerID2 = ""
-        // Google AdMob
-        googleAdMobBannerID = ""
-        googleAdMobBannerID2 = ""
-        googleAdMobNativeID = ""
-        Log.d(TAG, "onCreate.!AudienceNetworkAds.isInitialized")
-        /*
-        if (!AudienceNetworkAds.isInitialized(this)) {
-            if (BuildConfig.DEBUG) {
-                AdSettings.turnOnSDKDebugger(this)
-            }
-            AudienceNetworkAds
-                .buildInitSettings(this)
-                .withInitListener { initResult: InitResult ->
-                    Log.d(TAG, initResult.message)
-                }
-                .initialize()
-        }
-        */
-        // AudienceNetworkAds.initialize(this);
-        var testString = ""
-        // for debug mode
-        if (BuildConfig.DEBUG) {
-            testString = "IMG_16_9_APP_INSTALL#"
-        }
-        facebookInterstitialID = testString + facebookInterstitialID
-        Log.d(TAG, "onCreate.facebookInterstitialID")
-        //
-        /*
-        facebookAds = FacebookInterstitial(applicationContext, facebookInterstitialID)
+        val googleAdMobInterstitialID = "ca-app-pub-8354869049759576/6690798717"
         MobileAds.initialize(applicationContext) {
             Log.d(TAG, "Google Banner ads was initialized successfully")
         }
-        googleInterstitialAd = AdMobInterstitial(applicationContext, googleAdMobInterstitialID)
-        */
+        googleInterstitialAd = AdMobInterstitial(applicationContext,
+            googleAdMobInterstitialID)
     }
 
     override fun onTrimMemory(level: Int) {
@@ -63,18 +29,9 @@ class SmileApp : MultiDexApplication() {
 
     companion object {
         private const val TAG = "SmileApp"
-        @JvmField
         var isProcessingJob = false
-        @JvmField
-        var facebookBannerID = ""
-        @JvmField
-        var facebookBannerID2 = ""
-        @JvmField
-        var googleAdMobBannerID = ""
-        @JvmField
-        var googleAdMobBannerID2 = ""
-        @JvmField
-        var googleAdMobNativeID = ""
+        const val googleAdMobBannerID = "ca-app-pub-8354869049759576/7152164841"
+        const val googleAdMobNativeID = "ca-app-pub-8354869049759576/3429645905"
         lateinit var mResources: Resources
     }
 }

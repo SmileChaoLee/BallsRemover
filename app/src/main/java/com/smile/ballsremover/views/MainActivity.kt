@@ -411,7 +411,7 @@ class MainActivity : MyMainView() {
             }
         var expanded by remember { mutableStateOf(false) }
         Log.d(TAG, "ShowMenu.expanded = $expanded")
-        Box(modifier = modifier) {
+        Column(modifier = modifier) {
             IconButton (onClick = { expanded = !expanded }, modifier = modifier) {
                 Icon(
                     painter = painterResource(R.drawable.three_dots),
@@ -617,13 +617,7 @@ class MainActivity : MyMainView() {
         Column(modifier = modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top) {
-            /*
             ShowAdmobNormalBanner(modifier = Modifier.weight(1.0f))
-            ShowFacebookBanner(modifier = Modifier.weight(1.0f),
-                SmileApp.facebookBannerID)
-            ShowFacebookBanner(modifier = Modifier.weight(1.0f),
-                SmileApp.facebookBannerID2)
-            */
         }
     }
 
@@ -710,11 +704,8 @@ class MainActivity : MyMainView() {
             .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-            /*
             ShowNativeAd(modifier = Modifier.weight(8.0f))
-            ShowAdmobAdaptiveBanner(modifier = Modifier.weight(2.0f),
-                width = 0)
-             */
+            ShowAdmobNormalBanner(modifier = Modifier.weight(2.0f))
         }
     }
 

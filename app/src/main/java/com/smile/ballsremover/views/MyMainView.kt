@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,16 +14,25 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.smile.ballsremover.BuildConfig
 import com.smile.ballsremover.Composables
 import com.smile.ballsremover.R
+import com.smile.ballsremover.SmileApp
 import com.smile.ballsremover.constants.Constants
 import com.smile.ballsremover.interfaces.MainPresentView
 import com.smile.ballsremover.presenters.MainPresenter
 import com.smile.ballsremover.viewmodels.MainViewModel
+import com.smile.smilelibraries.AdMobBanner
 import com.smile.smilelibraries.scoresqlite.ScoreSQLite
 import com.smile.smilelibraries.show_interstitial_ads.ShowInterstitial
 import com.smile.smilelibraries.utilities.ScreenUtil
@@ -64,12 +74,10 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
 
         Log.d(TAG, "onCreate.interstitialAd")
 
-        /*
         (application as SmileApp).let {
-            interstitialAd = ShowInterstitial(this, it.facebookAds,
+            interstitialAd = ShowInterstitial(this, null,
                 it.googleInterstitialAd)
         }
-        */
 
         Log.d(TAG, "onCreate.instantiate MainPresenter")
         viewModel.setPresenter(MainPresenter(this@MyMainView))
@@ -266,7 +274,6 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         }
     }
 
-    /*
     @Composable
     fun ShowAdmobBanner(modifier: Modifier = Modifier,
                                 adId: String, width: Int = 0) {
@@ -290,20 +297,11 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     }
 
     @Composable
-    fun ShowAdmobAdaptiveBanner(modifier: Modifier = Modifier, width: Int) {
-        val adId = SmileApp.googleAdMobBannerID2
-        Log.d(TAG, "ShowAdmobAdaptiveBanner.adId = $adId")
-        ShowAdmobBanner(modifier = modifier, adId = adId, width = width)
-    }
-    */
-
-    @Composable
     fun MyNativeAdView(
         modifier: Modifier = Modifier,
         ad: NativeAd,
         adContent: @Composable (ad: NativeAd, view: View) -> Unit,) {
         Log.d(TAG, "MyNativeAdView")
-        /*
         val contentViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
         val adViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
         Log.d(TAG, "MyNativeAdView.AndroidView")
@@ -330,27 +328,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
                 contentView.setContent { adContent(ad, contentView) }
             }
         )
-        */
     }
-
-    /*
-    @Composable
-    fun ShowFacebookBanner(modifier: Modifier = Modifier, adId: String) {
-        // val adId = ColorBallsApp.facebookBannerID
-        val pId = if (BuildConfig.DEBUG) "IMG_16_9_APP_INSTALL#$adId" else adId
-        Log.d(TAG, "ShowFacebookBanner.adId = $adId")
-        AndroidView(
-            modifier = modifier,
-            factory = { context ->
-                com.facebook.ads.AdView(context, pId,
-                    com.facebook.ads.AdSize.BANNER_HEIGHT_50)
-            },
-            update = { faceAdView ->
-                FacebookBanner(faceAdView)
-            }
-        )
-    }
-    */
 
     // implementing MainPresentView
     override fun getMedalImageIds(): List<Int> {
