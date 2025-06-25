@@ -187,8 +187,8 @@ class MainViewModel: ViewModel() {
         }
         isNewGame = true
         if (gameProp != null && gridData != null) {
-            Log.d(TAG, "restoreState.gridData!! = ${gridData!!}")
-            gridData?.apply {
+            Log.d(TAG, "restoreState.gridData = $gridData")
+            gridData.apply {
                 for (i in 0 until Constants.ROW_COUNTS) {
                     for (j in 0 until Constants.COLUMN_COUNTS) {
                         if (getCellValue(i, j) != 0) {
