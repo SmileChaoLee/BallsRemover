@@ -1,13 +1,13 @@
 [versions]
 accompanistDrawablepainter = "0.37.3"
-agp = "8.6.1"
+agp = "8.11.0"
 appcompat = "1.7.1"
-audienceNetworkSdk = "6.19.0"
+audienceNetworkSdk = "6.20.0"
 constraintlayout = "2.2.1"
 firebaseAds = "23.6.0"
 firebaseCore = "21.1.1"
 inferAnnotation = "0.18.0"
-kotlin = "1.9.0"
+kotlin = "1.9.25"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -23,7 +23,7 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
-audience-network-sdk = { module = "com.facebook.android:audience-network-sdk", version = "6.20.0" }
+audience-network-sdk = { module = "com.facebook.android:audience-network-sdk", version.ref = "audienceNetworkSdk" }
 firebase-ads = { module = "com.google.firebase:firebase-ads", version.ref = "firebaseAds" }
 firebase-core = { module = "com.google.firebase:firebase-core", version.ref = "firebaseCore" }
 infer-annotation = { module = "com.facebook.infer.annotation:infer-annotation", version.ref = "inferAnnotation" }
@@ -32,12 +32,12 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2025.06.00" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version = "2025.06.01" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version = "1.8.3" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 

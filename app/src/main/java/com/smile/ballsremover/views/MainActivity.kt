@@ -73,7 +73,7 @@ class MainActivity : MyMainView() {
 
     private val mOrientation =
         mutableIntStateOf(Configuration.ORIENTATION_PORTRAIT)
-    private val gameGridWeight = 8.5f
+    private val gameGridWeight = 9.0f
     private var screenX = 0f
     private var screenY = 0f
     private var mImageSizeDp = 0f
@@ -248,13 +248,13 @@ class MainActivity : MyMainView() {
         Log.d(TAG, "GameView.mOrientation.intValue = ${mOrientation.intValue}")
         Log.d(TAG, "GameView.screenX = $screenX, screenY = $screenY")
         var maxWidth = screenX
-        var barWeight = 10.0f - gameGridWeight
-        var gameWeight = gameGridWeight
+        val barWeight = 10.0f - gameGridWeight
+        val gameWeight = gameGridWeight
         if (mOrientation.intValue == Configuration.ORIENTATION_LANDSCAPE) {
             Log.d(TAG, "GameView.ORIENTATION_LANDSCAPE")
             maxWidth = screenX/2.0f
-            barWeight = 1.0f
-            gameWeight = 9.0f
+            // barWeight = 1.0f
+            // gameWeight = 9.0f
         }
         val gridHeight = ScreenUtil.pixelToDp(screenY) * gameWeight / 10.0f
         Log.d(TAG, "GameView.gridHeight = $gridHeight")
@@ -422,7 +422,7 @@ class MainActivity : MyMainView() {
             DropdownMenu(expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier.requiredHeightIn(max = (mImageSizeDp*12.0f).dp)
-                    .requiredWidth(dropdownWidth.dp)
+                    .requiredWidth(width = dropdownWidth.dp)
                     .background(color =
                 Color(getColor(android.R.color.holo_green_light)))
                     .padding(all = 0.dp)
