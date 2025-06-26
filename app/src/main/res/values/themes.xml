@@ -2,6 +2,7 @@
 <resources>
     <style name="Theme.BallsRemover" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
+        <item name="android:dialogTheme">@style/Theme.DialogScreen</item>
     </style>
     <style name="ThemeTransparent" parent="Theme.BallsRemover">
         <item name="android:windowIsTranslucent">true</item>
@@ -9,5 +10,10 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+    <!-- Dialog Theme -->
+    <style name="Theme.DialogScreen" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0.1</item>
     </style>
 </resources>

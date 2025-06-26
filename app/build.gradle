@@ -11,12 +11,21 @@ android {
     namespace 'com.smile.ballsremover'
     compileSdk 36
 
+    signingConfigs {
+        release {
+            storeFile file('/home/chaolee/AndroidStudioProjects/keystore/new_key.jks')
+            storePassword '86637971'
+            keyAlias = 'chaolee1959'
+            keyPassword '86637971'
+        }
+    }
+
     defaultConfig {
         applicationId "com.smile.ballsremover"
         minSdk 23
         targetSdk 36
-        versionCode 11
-        versionName "1.1"
+        versionCode 120
+        versionName "1.20"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,6 +39,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

@@ -7,7 +7,7 @@
     <string name="no2">2</string>
     <string name="difficultStr">Difficult</string>
     <string name="playerLevelStr">Level</string>
-    <string name="fillColumnStr">Fill Blank Column</string>
+    <string name="fillColumnStr">Fill Column</string>
     <string name="quitGame">Quit Game</string>
     <string name="newGame">New Game</string>
     <string name="optionButton">OPTION</string>
@@ -24,7 +24,7 @@
     <string name="submitStr">Send</string>
     <string name="nameStr">Input your name</string>
     <string name="createNewGameStr">Create a New Game?</string>
-    <string name="loadingStr">Loading ...</string>
+    <string name="loadingStr">Loading …</string>
     <string name="undoStr">Undo</string>
     <string name="localTop10Str">Local Top 10</string>
     <string name="globalTop10Str">Global Top 10</string>
@@ -35,7 +35,7 @@
     <string name="noSoundStr">No</string>
     <string name="onStr">On</string>
     <string name="offStr">Off</string>
-    <string name="showingAdsStr">Showing Ads ...</string>
+    <string name="showingAdsStr">Showing Ads …</string>
     <string name="saveGameStr">Save Game</string>
     <string name="loadGameStr">Load Game</string>
     <string name="rotateDevice">Rotate Device</string>

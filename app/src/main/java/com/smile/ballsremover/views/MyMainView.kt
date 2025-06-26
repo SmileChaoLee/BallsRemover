@@ -2,9 +2,7 @@ package com.smile.ballsremover.views
 
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -40,6 +38,8 @@ import com.smile.smilelibraries.utilities.SoundPoolUtil
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import androidx.core.graphics.scale
+import androidx.core.graphics.drawable.toDrawable
 
 abstract class MyMainView: ComponentActivity(), MainPresentView {
 
@@ -103,7 +103,8 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
         val ovalBallHeight = (sizePx * 0.7f).toInt()
 
         BitmapFactory.decodeResource(resources, R.drawable.box_image).let { bm ->
-            boxImage = createScaledBitmap(bm, ballWidth, ballHeight, true)
+            // boxImage = createScaledBitmap(bm, ballWidth, ballHeight, true)
+            boxImage = bm.scale(ballWidth, ballHeight)
         }
         Log.d(TAG, "bitmapDrawableResources.boxImage.height = ${boxImage?.height}")
         Log.d(TAG, "bitmapDrawableResources.boxImage.height.toDp " +
@@ -111,44 +112,44 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
 
         BitmapFactory.decodeResource(resources, R.drawable.redball)?.let { bm ->
             colorBallMap[Constants.COLOR_RED] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_RED] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
 
         BitmapFactory.decodeResource(resources, R.drawable.greenball)?.let { bm ->
             colorBallMap[Constants.COLOR_GREEN] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_GREEN] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
 
         BitmapFactory.decodeResource(resources, R.drawable.blueball)?.let { bm ->
             colorBallMap[Constants.COLOR_BLUE] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_BLUE] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
 
         BitmapFactory.decodeResource(resources, R.drawable.magentaball)?.let { bm ->
             colorBallMap[Constants.COLOR_MAGENTA] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_MAGENTA] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
 
         BitmapFactory.decodeResource(resources, R.drawable.yellowball)?.let { bm ->
             colorBallMap[Constants.COLOR_YELLOW] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_YELLOW] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
 
         BitmapFactory.decodeResource(resources, R.drawable.cyanball)?.let { bm ->
             colorBallMap[Constants.COLOR_CYAN] =
-                createScaledBitmap(bm, ballWidth, ballHeight, true)
+                bm.scale(ballWidth, ballHeight)
             colorOvalBallMap[Constants.COLOR_CYAN] =
-                createScaledBitmap(bm, ovalBallWidth, ovalBallHeight, true)
+                bm.scale(ovalBallWidth, ovalBallHeight)
         }
     }
 
@@ -300,7 +301,8 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     fun MyNativeAdView(
         modifier: Modifier = Modifier,
         ad: NativeAd,
-        adContent: @Composable (ad: NativeAd, view: View) -> Unit,) {
+        adContent: @Composable (ad: NativeAd, view: View) -> Unit,
+    ) {
         Log.d(TAG, "MyNativeAdView")
         val contentViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
         val adViewId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
@@ -323,7 +325,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
                 val contentView = nativeAdView.findViewById<ComposeView>(contentViewId)
                 Log.d(TAG, "MyNativeAdView.AndroidView.update.setNativeAd()")
                 adView.setNativeAd(ad)
-                adView.background = ColorDrawable(-0x1)
+                adView.background = (-0x1).toDrawable() // white color
                 adView.callToActionView = contentView
                 contentView.setContent { adContent(ad, contentView) }
             }
