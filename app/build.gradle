@@ -24,8 +24,8 @@ android {
         applicationId "com.smile.ballsremover"
         minSdk 23
         targetSdk 36
-        versionCode 120
-        versionName "1.20"
+        versionCode 140
+        versionName "1.40"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

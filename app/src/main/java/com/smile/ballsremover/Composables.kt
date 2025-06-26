@@ -246,6 +246,8 @@ object Composables {
                     .fillMaxWidth()
                     .weight(spaceWeight)
             )
+            val yesStr = activity.getString(R.string.yesStr)
+            val noStr = activity.getString(R.string.noStr)
             Row(modifier = Modifier.weight(setRowWeight)) {    // setting row
                 Spacer(
                     modifier = Modifier
@@ -278,8 +280,6 @@ object Composables {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        val yesStr = activity.getString(R.string.yesStr)
-                        val noStr = activity.getString(R.string.noStr)
                         var hasSound by remember { mutableStateOf(setting.hasSound) }
                         MenuItemText(
                             text = activity.getString(R.string.soundStr),
@@ -349,8 +349,6 @@ object Composables {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        val showStr = activity.getString(R.string.showStr)
-                        val noShowStr = activity.getString(R.string.noShowStr)
                         var fillColumn by remember { mutableStateOf(setting.fillColumn) }
                         MenuItemText(
                             text = activity.getString(R.string.fillColumnStr),
@@ -370,7 +368,7 @@ object Composables {
                             Color.White
                         )
                         MenuItemText(
-                            text = if (fillColumn) showStr else noShowStr,
+                            text = if (fillColumn) yesStr else noStr,
                             color = textColor,
                             modifier = Modifier
                                 .weight(1f)

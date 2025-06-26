@@ -311,7 +311,7 @@ class MainActivity : MyMainView() {
         Log.d(
             TAG, "ShowCurrentScore.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
-        Text(text = viewModel.currentScore.intValue.toString(),
+        Text(text = viewModel.getCurrentScore().toString(),
             modifier = modifier,
             color = Color.Green, fontSize = Composables.mFontSize
         )
@@ -322,7 +322,7 @@ class MainActivity : MyMainView() {
         Log.d(
             TAG, "SHowHighestScore.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
-        Text(text = viewModel.highestScore.intValue.toString(),
+        Text(text = viewModel.getHighestScore().toString(),
             modifier = modifier,
             color = Color.White, fontSize = Composables.mFontSize
         )
@@ -542,7 +542,7 @@ class MainActivity : MyMainView() {
     fun ShowMessageOnScreen() {
         Log.d(TAG, "ShowMessageOnScreen.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
-        val message = viewModel.screenMessage.value
+        val message = viewModel.getScreenMessage()
         if (message.isEmpty()) return
         val gameViewLength = mImageSizeDp * Constants.COLUMN_COUNTS.toFloat()
         val width = (gameViewLength/2f).dp
@@ -567,8 +567,7 @@ class MainActivity : MyMainView() {
 
     @Composable
     fun ShowColorBall(i: Int, j: Int) {
-        Log.d(
-            TAG, "ShowColorBall.mOrientation.intValue" +
+        Log.d(TAG, "ShowColorBall.mOrientation.intValue" +
                 " = ${mOrientation.intValue}")
         val ballInfo = viewModel.gridDataArray[i][j].value
         val ballColor = ballInfo.ballColor

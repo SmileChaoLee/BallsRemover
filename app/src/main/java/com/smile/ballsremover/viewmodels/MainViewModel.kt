@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.os.BundleCompat
@@ -52,36 +51,48 @@ class MainViewModel: ViewModel() {
     private lateinit var medalImageIds: List<Int>
 
     var mGameAction = Constants.IS_QUITING_GAME
-    val currentScore = mutableIntStateOf(0)
-    val highestScore = mutableIntStateOf(0)
-    val screenMessage = mutableStateOf("")
+    var timesPlayed = 0
 
-    private val _createNewGameText = mutableStateOf("")
-    val createNewGameText: MutableState<String>
-        get() = _createNewGameText
+    private val currentScore = mutableIntStateOf(0)
+    fun getCurrentScore() = currentScore.intValue
+    private fun setCurrentScore(score: Int) {
+        currentScore.intValue = score
+    }
+
+    private val highestScore = mutableIntStateOf(0)
+    fun getHighestScore() = highestScore.intValue
+    private fun setHighestScore(score: Int) {
+        highestScore.intValue = score
+    }
+
+    private val screenMessage = mutableStateOf("")
+    fun getScreenMessage() = screenMessage.value
+    private fun setScreenMessage(msg: String) {
+        screenMessage.value = msg
+    }
+
+    private val createNewGameText = mutableStateOf("")
+    fun getCreateNewGameText() = createNewGameText.value
     fun setCreateNewGameText(text: String) {
-        _createNewGameText.value = text
+        createNewGameText.value = text
     }
 
-    private val _saveGameText = mutableStateOf("")
-    val saveGameText: MutableState<String>
-        get() = _saveGameText
+    private val saveGameText = mutableStateOf("")
+    fun getSaveGameText() = saveGameText.value
     fun setSaveGameText(text: String) {
-        _saveGameText.value = text
+        saveGameText.value = text
     }
 
-    private val _loadGameText = mutableStateOf("")
-    val loadGameText: MutableState<String>
-        get() = _loadGameText
+    private val loadGameText = mutableStateOf("")
+    fun getLoadGameText() = loadGameText.value
     fun setLoadGameText(text: String) {
-        _loadGameText.value = text
+        loadGameText.value = text
     }
 
-    private val _saveScoreTitle = mutableStateOf("")
-    val saveScoreTitle: MutableState<String>
-        get() = _saveScoreTitle
+    private val saveScoreTitle = mutableStateOf("")
+    fun getSaveScoreTitle() = saveScoreTitle.value
     fun setSaveScoreTitle(title: String) {
-        _saveScoreTitle.value = title
+        saveScoreTitle.value = title
     }
 
     val gridDataArray = Array(Constants.ROW_COUNTS) {
@@ -119,7 +130,7 @@ class MainViewModel: ViewModel() {
             Log.d(TAG, "cellClickListener.tempLine.size = ${tempLine.size}")
             mGameProp.lastGotScore = calculateScore(tempLine)
             mGameProp.currentScore += mGameProp.lastGotScore
-            currentScore.intValue = mGameProp.currentScore
+            setCurrentScore(mGameProp.currentScore)
             val showScore = ShowScore(
                 mGridData.getLightLine(), mGameProp.lastGotScore,
                 object : ShowScoreCallback {
@@ -157,9 +168,9 @@ class MainViewModel: ViewModel() {
     fun initGame(state: Bundle?) {
         Log.d(TAG, "initGame = $state")
         val isNewGame = restoreState(state)
-        highestScore.intValue = mPresenter.highestScore()
-        Log.d(TAG, "initGame.highestScore = ${highestScore.intValue}")
-        currentScore.intValue = mGameProp.currentScore
+        setHighestScore(mPresenter.highestScore())
+        Log.d(TAG, "initGame.highestScore = ${getHighestScore()}")
+        setCurrentScore(mGameProp.currentScore)
         if (isNewGame) {
             // generate
             Log.d(TAG, "initGame.isNewGame")
@@ -252,7 +263,7 @@ class MainViewModel: ViewModel() {
         // restore the screen
         displayGameGridView()
         mGameProp.currentScore = mGameProp.undoScore
-        currentScore.intValue = mGameProp.currentScore
+        setCurrentScore(mGameProp.currentScore)
         mGameProp.undoEnable = false
     }
 
@@ -288,6 +299,8 @@ class MainViewModel: ViewModel() {
     fun newGame() {
         // creating a new game
         Log.d(TAG, "newGame")
+        timesPlayed++
+        Log.d(TAG, "newGame.timesPlayed = $timesPlayed")
         mGameAction = Constants.IS_CREATING_GAME
         setSaveScoreTitle(saveScoreStr)
     }
@@ -312,7 +325,7 @@ class MainViewModel: ViewModel() {
     fun startSavingGame(): Boolean {
         Log.d(TAG, "startSavingGame")
         SmileApp.isProcessingJob = true
-        screenMessage.value = savingGameStr
+        setScreenMessage(savingGameStr)
         var succeeded = true
         try {
             val foStream = mPresenter.fileOutputStream(SAVE_FILENAME)
@@ -349,7 +362,7 @@ class MainViewModel: ViewModel() {
             Log.d(TAG, "startSavingGame.Failed.")
         }
         SmileApp.isProcessingJob = false
-        screenMessage.value = ""
+        setScreenMessage("")
         Log.d(TAG, "startSavingGame.Finished")
         return succeeded
     }
@@ -357,7 +370,7 @@ class MainViewModel: ViewModel() {
     fun startLoadingGame(): Boolean {
         Log.d(TAG, "startLoadingGame")
         SmileApp.isProcessingJob = true
-        screenMessage.value = loadingGameStr
+        setScreenMessage(loadingGameStr)
         var succeeded = true
         val hasSound: Boolean
         val gameLevel: Int
@@ -414,14 +427,14 @@ class MainViewModel: ViewModel() {
             mGameProp.undoScore = unScore
             mGameProp.undoEnable = isUndoEnable
             // start update UI
-            currentScore.intValue = mGameProp.currentScore
+            setCurrentScore(mGameProp.currentScore)
             displayGameGridView()
         } catch (ex: IOException) {
             ex.printStackTrace()
             succeeded = false
         }
         SmileApp.isProcessingJob = false
-        screenMessage.value = ""
+        setScreenMessage("")
         return succeeded
     }
 
@@ -512,7 +525,7 @@ class MainViewModel: ViewModel() {
                 }
                 2 -> {}
                 3 -> {
-                    screenMessage.value = lastGotScore.toString()
+                    setScreenMessage(lastGotScore.toString())
                     for (item in pointSet) {
                         clearCell(item.x, item.y)
                         drawBall(item.x, item.y, mGridData.getCellValue(item.x, item.y))
@@ -520,7 +533,7 @@ class MainViewModel: ViewModel() {
                 }
                 4 -> {
                     Log.d(TAG, "ShowScore.onProgressUpdate.dismissShowMessageOnScreen.")
-                    screenMessage.value = ""
+                    setScreenMessage("")
                 }
                 else -> {}
             }

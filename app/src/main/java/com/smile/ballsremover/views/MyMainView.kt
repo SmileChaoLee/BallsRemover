@@ -173,7 +173,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     @Composable
     fun CreateNewGameDialog() {
         Log.d(TAG, "CreateNewGameDialog")
-        val dialogText = viewModel.createNewGameText.value
+        val dialogText = viewModel.getCreateNewGameText()
         if (dialogText.isNotEmpty()) {
             val buttonListener = object: Composables.ButtonClickListener {
                 override fun buttonOkClick() {
@@ -194,7 +194,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     @Composable
     fun SaveGameDialog() {
         Log.d(TAG, "SaveGameDialog")
-        val dialogText = viewModel.saveGameText.value
+        val dialogText = viewModel.getSaveGameText()
         if (dialogText.isNotEmpty()) {
             val buttonListener = object: Composables.ButtonClickListener {
                 override fun buttonOkClick() {
@@ -222,7 +222,7 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     @Composable
     fun LoadGameDialog() {
         Log.d(TAG, "LoadGameDialog")
-        val dialogText = viewModel.loadGameText.value
+        val dialogText = viewModel.getLoadGameText()
         if (dialogText.isNotEmpty()) {
             val buttonListener = object: Composables.ButtonClickListener {
                 override fun buttonOkClick() {
@@ -250,14 +250,13 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
     @Composable
     fun SaveScoreDialog() {
         Log.d(TAG, "SaveScoreDialog")
-        val dialogTitle = viewModel.saveScoreTitle.value
+        val dialogTitle = viewModel.getSaveScoreTitle()
         if (dialogTitle.isNotEmpty()) {
             val buttonListener = object: Composables.ButtonClickListenerString {
                 override fun buttonOkClick(value: String?) {
                     Log.d(TAG, "SaveScoreDialog.buttonOkClick.value = $value")
                     viewModel.saveScore(value ?: "No Name")
                     quitOrNewGame()
-                    // set SaveScoreDialog() invisible
                     viewModel.setSaveScoreTitle("")
                 }
                 override fun buttonCancelClick(value: String?) {
@@ -272,6 +271,12 @@ abstract class MyMainView: ComponentActivity(), MainPresentView {
                 this@MyMainView,
                 buttonListener, dialogTitle, hitStr
             )
+        } else {
+            if (viewModel.timesPlayed >= Constants.SHOW_ADS_AFTER_TIMES) {
+                Log.d(TAG, "SaveScoreDialog.showInterstitialAd")
+                showInterstitialAd()
+                viewModel.timesPlayed = 0
+            }
         }
     }
 

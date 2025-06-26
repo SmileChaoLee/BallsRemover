@@ -27,4 +27,5 @@ object Constants {
     const val GRID_DATA_TAG = "GridData"
     const val IS_CREATING_GAME = 1
     const val IS_QUITING_GAME = 0
+    const val SHOW_ADS_AFTER_TIMES = 3
 }
